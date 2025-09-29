@@ -12,6 +12,8 @@ import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js";
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 
+var userCsvPath;
+
 const Indicator = GObject.registerClass(
 	class Indicator extends PanelMenu.Button {
 		_init(metadata) {
@@ -49,13 +51,13 @@ const Indicator = GObject.registerClass(
 				style_class: "system-menu-action",
 				child: editIcon,
 			});
-			editButton.connect("clicked", () => {
-				let [success, stdout] = this._executeCommand(
-					"gnome-text-editor ~/.config/sanad@apps.mirsobhan.ir/sanad.ns.csv"
-				);
 
+			editButton.connect("clicked", () => {
+				let uri = GLib.filename_to_uri(userCsvPath, null);
+				Gio.AppInfo.launch_default_for_uri(uri, null);
 				log("Change DNS clicked");
 			});
+
 			dnsRow.add_child(editButton);
 
 			let containerItem = new PopupMenu.PopupBaseMenuItem({ reactive: false });
@@ -122,7 +124,7 @@ const Indicator = GObject.registerClass(
 				let extensionDir = this._metadata.path; // Get extension directory from metadata
 
 				// Define paths
-				let userCsvPath = GLib.build_filenamev([
+				userCsvPath = GLib.build_filenamev([
 					userConfigDir,
 					"sanad@apps.mirsobhan.ir",
 					"sanad.ns.csv",
