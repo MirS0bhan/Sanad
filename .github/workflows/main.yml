@@ -1,0 +1,12 @@
+on:
+  push:
+    tags:
+      - '*' 
+jobs:
+  - name: Package and Upload GNOME Extension
+      uses: murar8/gnome-extensions-action@0.1.0
+      with:
+        source-dir: sanad@apps.mirsobhan.ir
+        username: misano
+        password: ${{ secrets.GNOME_PASSWORD }} 
+        accept-tos: true
